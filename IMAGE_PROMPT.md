@@ -1,25 +1,23 @@
-# Lighting reference
+# Artwork generation
 
-Mode: built-in `image_gen` edit, one source image and one generated all-off lighting reference. The generated reference is `dist/assets/watercolor-unlit-reference.png`; the unchanged source is `dist/assets/watercolor-original.jpeg`.
+The updated user-provided reference is the 1536 × 1024 isometric home with bedroom upper left, gallery hallway upper center, study upper right, living room lower left, and kitchen lower right. `dist/assets/styles/original-day.png` is an unchanged copy of that source.
 
-The reference introduced small detail changes. The app therefore uses only its low-frequency illumination, transferred onto the original pixels. Its redrawn objects are not shown. All 32 lossless final PNGs and their ZIP are saved in the parent workspace's `output` directory. This preserves the original composition and painted detail while simulating lighting; it is not a physically exact relighting of a measured 3D scene.
+Every generated asset used the built-in image generation tool. Each style has a day and night all-on master and a corresponding all-off lighting reference. The eighth style is layered papercut. The sparse ink and Ghibli masters were refined to make their visual media more distinct; the logs retain the exact prompts and iteration lineage.
 
-## Exact image-generation prompt
+## Exact prompts and provenance
 
-Use case: lighting-weather
-Asset type: exact-alignment alternate state for an interactive watercolor home illustration.
-Input image: the attached /Users/jeffk/Downloads/Watercolor image.jpeg is the EDIT TARGET, not a style reference.
-Primary request: Make exactly one lighting-only edit of this existing watercolor cutaway home: turn ALL artificial lights OFF in all five rooms. Preserve the complete composition and all visual content with exceptionally high fidelity so this edited image can be layered over the original.
+- [Original, watercolor, and Ghibli](docs/image-prompts/isometric-watercolor-ghibli.md)
+- [Abstract, synthwave, and Dalí](docs/image-prompts/abstract-synthwave-dali.md)
+- [Papercut and initial ink exploration](docs/image-prompts/papercut-and-initial-ink.md)
+- [Final minimalist ink](docs/image-prompts/minimal-ink.md)
+- [Original, watercolor, and Ghibli lights-off references](docs/image-prompts/isometric-watercolor-ghibli-off.md)
+- [Abstract, synthwave, and Dalí lights-off references](docs/image-prompts/abstract-synthwave-dali-off.md)
+- [Ink and papercut lights-off references](docs/image-prompts/ink-papercut-off.md)
 
-The five areas are:
-1. Bedroom, top left: bedside lamp off; remove the warm lamp glow from the bed, walls, and floor.
-2. Gallery hallway, upper center: every picture light off; remove all warm illumination pools over the artwork, walls, and wood floor.
-3. Study, top right: desk lamp and computer display off; eliminate artificial warm illumination and monitor emission.
-4. Living room, bottom left: curved floor lamp off; no glowing bulb, no warm light pool on wall, sofa, rug, or floor.
-5. Kitchen and dining room, bottom right: all ceiling, pendant, cabinet, and task illumination off; bulbs and fixtures no longer emit light; no warm illumination pools on cupboards, counters, table, or floor.
+Asset naming is `{style}-{day|night}.png` for a displayed master and `{style}-{day|night}-off.png` for its lighting reference. Style IDs are `original`, `watercolor`, `ghibli`, `abstract`, `synthwave`, `dali`, `ink`, and `papercut`. All 32 files are 1536 × 1024.
 
-Lighting/mood: Cool, dim nighttime moonlight and soft blue ambient illumination remain, enough to see the watercolor objects and room boundaries clearly. Every electric light is completely off. Keep the actual warm material colors of wood and textiles where naturally visible, but remove artificial warm yellow cast, luminous bulbs, and emitted pools. The dark rooms should be visibly darker and cooler than the original.
+## Compositing
 
-Strict invariants: Change ONLY interior lighting and its directly cast illumination. Preserve EXACT camera, crop, house geometry, silhouette, room divisions, wall edges, stair railings, every stair tread, artwork, frames, furniture, plants, desk, monitor, kitchen units, dining table and chairs, small objects, proportions, and positions. No objects may be moved, removed, added, redrawn, or reimagined. Preserve the source watercolor brushwork, paper grain, textures, painted detail, and illustrative style. Preserve exterior night sky, crescent moon, outside background, house exterior, and white watercolor paper edges exactly as in the original. Do not darken the full canvas or alter the exterior. No text, labels, overlays, new decorations, or watermark.
+The generated all-off references have minor contour drift. Their pixels are not used to replace illustrated objects. The app transfers their blurred RGB illumination fields onto each matching all-on master, constrained by five room polygons. All 32 lighting combinations share fixed source geometry and detail. The all-on display and PNG export preserve the decoded master pixels; pixels outside room masks remain unchanged in every state.
 
-Composition/framing: Same landscape image, full original framing, same approximately 3:2 aspect ratio as the 1024x682 source. This is the same image with only all interior artificial lighting switched off, not a new rendition of the house.
+Natural ambient light remains in daytime. Nighttime is dimmer and cooler. These are artistic lighting simulations, not physical light-transport renders. The app produces all 512 combinations on demand and exports 32 per selected style/time, avoiding a large download before interaction.
