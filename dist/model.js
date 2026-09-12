@@ -6,8 +6,6 @@ export const ROOMS = [
  {id:'kitchen',name:'Kitchen & dining',detail:'Counter & dining lights',floor:'down',icon:'kitchen',pin:[1.5,.45,2.28]},
  {id:'bedroom',name:'Bedroom',detail:'Two bedside lamps',floor:'up',icon:'bed',pin:[-5.35,4,2.25]},
  {id:'gallery',name:'Stair gallery',detail:'Warm gallery sconces',floor:'both',icon:'stairs',pin:[-2.5,3.95,2.25]},
- {id:'shower',name:'Shower room',detail:'Vanity light',floor:'up',icon:'shower',pin:[-.3,4.05,.8]},
- {id:'bath',name:'Bathroom',detail:'Vanity & bath light',floor:'up',icon:'bath',pin:[1.5,4.05,.8]},
  {id:'study',name:'Study',detail:'Desk & reading lamps',floor:'up',icon:'desk',pin:[4.8,4,2.25]},
 ];
 
@@ -41,8 +39,8 @@ export function buildHome(scene) {
  zone('kitchen','down');floorRect(.55,0,6.3,4.6,.1);wall(.55,-2.3,6.3,.16,.1,3.35);wall(3.77,0,.16,4.76,.1,3.35);
  zone('bedroom','up');wall(-7.04,0,.16,4.76,3.5,3.27);floorRect(-5.4,0,3.2,4.6,3.65);wall(-5.4,-2.3,3.2,.16,3.65,3.12);wall(-3.77,.1,.14,4.5,3.65,2.6);
  zone('gallery','up');floorRect(-2.2,1.4,3.2,1.8,3.65);floorRect(-.53,-.9,.3,2.8,3.65);wall(-2.2,-2.3,3.2,.16,3.65,3.12);
- zone('shower','up');floorRect(.3,0,1.75,4.6,3.65);wall(.3,-2.3,1.75,.16,3.65,3.12);wall(-.59,-.77,.12,3.07,3.65,2.9);
- zone('bath','up');floorRect(2.03,0,1.72,4.6,3.65);wall(2.03,-2.3,1.72,.16,3.65,3.12);wall(1.17,-.77,.12,3.07,3.65,2.9);
+ // Bathrooms are omitted from the smart-home model; the gallery connects to the study.
+ floorRect(1.15,0,3.5,4.6,3.65);wall(1.15,-2.3,3.5,.16,3.65,3.12);
  zone('study','up');floorRect(4.95,0,4.1,4.6,3.65);wall(4.95,-2.3,4.1,.16,3.65,3.12);wall(2.92,-.25,.14,4.1,3.65,2.9);wall(7.04,0,.16,4.76,3.65,3.12);
 
  // Living room: a soft sectional, warm timber, gallery wall and plants.
@@ -59,16 +57,11 @@ export function buildHome(scene) {
  for(let i=0;i<12;i++){const x=-2.55+i*.18,y=.98+i*.226;box(x,y,-1.02,.21,.17,1.04,color.dark);box(x,y+.11,-1.02,.235,.06,1.075,color.oak);}rod([-2.74,.72,-.47],[-.47,3.55,-.47],.055,color.dark);rod([-2.8,1.76,-.43],[-.39,4.58,-.43],.035,color.dark);for(let i=0;i<5;i++){const x=-2.7+i*.53,y=1+i*.64;rod([x,y,-.43],[x,y+.85,-.43],.026,color.dark);}for(let n=1;n<3;n++)rod([-2.8,.97+n*.24,-.43],[-.39,3.8+n*.24,-.43],.01,color.dark);plant(-2.25,.16,-1.91,.86,'#c5b899');plant(-1.86,.16,-1.84,.55,'#d7c9ad');
  zone('gallery','up');for(let i=0;i<5;i++)rod([-3.65+i*.74,3.65,.43],[-3.65+i*.74,4.55,.43],.027,color.dark);rod([-3.65,4.55,.43],[-.69,4.55,.43],.035,color.dark);for(let n=1;n<3;n++)rod([-3.65,3.65+n*.28,.43],[-.69,3.65+n*.28,.43],.012,color.dark);rug(-.1,3.67,1.59,5.3,.71,'#824f38','#c28e54');plant(-3.43,3.67,1.59,.65,'#9c815b');sconce(-2.6,5.67,-2.07);
  frame(-2.06,5.62,-2.19,1.16,1.25,'#202d30',3);const mandala=mesh(new THREE.TorusGeometry(.41,.013,6,64),material('#cc873d'),-2.06,5.62,-2.08);for(let i=0;i<16;i++){const a=i*Math.PI/8;rod([-2.06,5.62,-2.069],[-2.06+Math.sin(a)*.41,5.62+Math.cos(a)*.41,-2.069],.004,'#cc873d');}frame(-.99,5.7,-2.19,.37,.42,'#975c47',1);frame(-.99,5.12,-2.19,.37,.42,'#ae775a',1);
+ frame(.4,5.76,-2.19,.8,.62,'#798272',2);frame(1.85,5.79,-2.19,.77,.58,'#859491',2);sconce(1.12,5.61,-2.07);plant(2.5,3.67,-1.84,.62,'#c0bfa4');
 
  // Bedroom: teal textiles, layered ivory bedding and two small warm lamps.
  zone('bedroom','up');windowBack(-5.67,5.68,-2.19,1.15,1.48);rug(-5.43,3.67,.23,2.5,3.36,'#aba291','#8b8c7d');box(-5.35,4.03,.01,1.99,.4,2.84,color.oak,.075);box(-5.35,4.3,.04,1.96,.28,2.73,'#ece5d5',.14);box(-5.35,4.51,.31,2.03,.21,2.1,'#eee8d8',.15);box(-5.35,4.55,-1.39,2.12,1.15,.16,color.teal,.1);for(const x of [-5.83,-4.89]){const p=box(x,4.64,-.91,.81,.2,.6,'#f8f0df',.14);p.rotation.x=.12;}box(-5.35,4.66,.84,2.04,.12,.76,'#657f7b',.055);const cushion=ball(-5.35,4.91,-.48,.26,.27,.13,'#527774');cushion.rotation.x=-.1;
  for(const x of [-6.61,-4.07]){box(x,4.07,-.96,.45,.69,.51,color.oak,.03);box(x,4.11,-.69,.39,.23,.018,'#c99e68');ball(x,4.1,-.66,.03,.03,.02,color.brass);lamp(x,4.43,-.96,.51,.62);}plant(-6.57,3.68,1.38,.8,'#a28665');frame(-4.76,6,-2.19,.71,.53,'#59757d',2);
-
- function tileRoom(x,w){box(x,3.69,-.69,w-.08,.06,3.02,'#c2c0b4');for(let i=0;i<6;i++)for(let j=0;j<7;j++){box(x-w/2+.12+i*(w-.16)/6,3.732,-2.1+j*.43,(w-.17)/6-.014,.015,.414,'#ccc9bb');}box(x,4.63,-2.18,w-.12,1.9,.045,'#aab4ad');for(let i=0;i<4;i++)box(x-w/2+.2+i*.39,4.64,-2.148,.012,1.85,.01,'#d5d6c9');for(let i=0;i<5;i++)box(x,3.75+i*.4,-2.147,w-.13,.012,.01,'#d5d6c9');}
- function toilet(x,y,z){box(x,y+.45,z-.15,.37,.77,.28,'#ecebdf',.07);const bowl=ball(x,y+.35,z+.16,.24,.25,.34,'#e4e4d8');const seat=mesh(new THREE.TorusGeometry(.175,.038,8,24),material('#f2efe3'),x,y+.53,z+.21);seat.rotation.x=Math.PI/2;seat.scale.y=1.3;}
- function vanity(x,y,z){box(x,y+.44,z,.55,.78,.45,color.oak,.025);box(x,y+.86,z,.62,.1,.5,'#e7e5d8',.02);box(x,y+.92,z,.37,.03,.25,'#9caaa4',.055);rod([x,y+.92,z-.17],[x,y+1.15,z-.17],.019,'#aeb3ab');rod([x,y+1.15,z-.17],[x,y+1.15,z-.04],.019,'#aeb3ab');box(x,y+1.6,z-.24,.62,.8,.05,color.oak,.025);box(x,y+1.6,z-.2,.52,.69,.015,'#879c9b');}
- zone('shower','up');tileRoom(.3,1.75);toilet(.76,3.75,-1.57);vanity(-.15,3.74,-1.36);box(-.1,3.8,-.03,.75,.12,1,'#e2e1d6',.06);const glass=material('#b6d6d6',{transparent:true,opacity:.2,roughness:.1,depthWrite:false});const pane=mesh(new THREE.BoxGeometry(.015,1.85,1.05),glass,.25,4.76,-.04);pane.castShadow=false;rod([-.38,5.69,-.48],[-.38,5.69,-.1],.023,'#515954');cyl(-.38,5.65,-.08,.1,.1,.05,'#626d65');sconce(.39,6.06,-2.04);plant(.85,5.9,-2.01,.35,'#cbb98e');
- zone('bath','up');tileRoom(2.03,1.72);toilet(2.54,3.75,-1.59);vanity(1.67,3.74,-1.39);box(2.02,3.99,-.02,1.42,.46,1.02,'#eae8dc',.13);box(2.02,4.24,-.02,1.26,.075,.87,'#f1eee3',.1);box(2.02,4.282,-.02,1.02,.022,.65,'#98aead',.09);rod([1.53,4.29,-.31],[1.53,4.48,-.31],.025,'#a5aaa2');plant(2.58,3.76,.52,.4,'#cab486');frame(1.74,6.09,-2.16,.75,.5,'#859491',2);sconce(2.42,5.86,-2.03);
 
  // Office with the monitor, plant cabinet, books and an oversized beanbag.
  zone('study','up');sideWindow(6.91,5.48,.32,2.46,1.82);rug(5.01,3.67,.48,3.45,2.77,'#bcb5a2','#798b8a');box(4.01,4.67,-1.54,1.76,.13,1.1,color.oak,.03);box(4.7,4.14,-1.53,.45,.96,.86,'#e3e1d5',.035);for(let i=0;i<3;i++){box(4.7,3.89+i*.28,-1.087,.41,.23,.018,'#f0eadc');box(4.7,3.9+i*.28,-1.065,.1,.025,.012,color.dark);}for(const x of [3.22,4.7])rod([x,3.7,-1.84],[x,4.6,-1.84],.035,color.dark);box(3.84,5.14,-1.68,.94,.61,.055,color.dark,.02);box(3.84,5.14,-1.646,.86,.53,.01,'#192c34');box(3.84,4.79,-1.67,.07,.21,.06,color.dark);box(3.84,4.755,-1.67,.36,.025,.2,color.dark);box(3.81,4.75,-1.2,.58,.026,.19,'#374444',.02);ball(4.25,4.765,-1.2,.055,.023,.085,'#343d3d');lamp(4.5,4.76,-1.76,.61,.62);
