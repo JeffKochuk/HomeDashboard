@@ -9,7 +9,7 @@ export const rooms = [
 export const WIDTH=1536, HEIGHT=1024;
 export const stateKey = state => rooms.map(room => state & room.bit ? '1' : '0').join('');
 export const stateName = state => state === 31 ? 'All lights on' : state === 0 ? 'All lights off' : rooms.filter(room=>state & room.bit).map(room=>room.name).join(', ');
-export const stateFile = (state, style, time) => `${style}-${time}-${stateKey(state)}.png`;
+export const stateFile = (state, style, time, collection='original') => `${collection}-${style}-${time}-${stateKey(state)}.png`;
 export const polygonPath = points => `M${points.map(p=>p.join(',')).join('L')}Z`;
 
 // Sparse ink uses a thinner slab and lower drawn floor edges than the 3D master.
