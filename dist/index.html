@@ -1,38 +1,14 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#111820">
-  <meta name="description" content="Explore a miniature of home after dark. Turn on the lights, room by room, in an interactive 3D apartment.">
-  <title>Home, after hours</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23111820'/%3E%3Cpath d='M8 20 20 10l12 10v13H8Z' fill='none' stroke='%23eac68c' stroke-width='2'/%3E%3Cpath d='M17 24h6v9h-6Z' fill='%23eac68c'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./style.css">
-  <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="./app.js"></script>
-</head>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111a23"><meta name="description" content="Your watercolor home, one light at a time. Click five rooms to explore all 32 lighting combinations."><title>Home, after hours · Room lights</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23111820'/%3E%3Cpath d='M8 20 20 10l12 10v13H8Z' fill='none' stroke='%23eac68c' stroke-width='2'/%3E%3Cpath d='M17 24h6v9h-6Z' fill='%23eac68c'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./lighting.css"><script type="module" src="./lighting.js"></script></head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="Home, after hours"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="m4 15 12-10 12 10v13H4Z"/><path d="M12 28V17h8v11M16 5v7"/></svg><span>home<span class="brand-divider">/</span><span class="brand-sub">after hours</span></span></a>
-    <span class="night-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.3A8.5 8.5 0 0 1 8.7 4 8.5 8.5 0 1 0 20 15.3Z"/></svg> A quiet evening</span>
-  </header>
-  <main>
-    <section class="scene-section" aria-label="Interactive apartment model">
-      <div class="scene-heading"><span class="eyebrow">YOUR OWN LITTLE WORLD</span><h1>Home, after hours.</h1></div>
-      <div class="view-controls" role="group" aria-label="Floor view"><button class="active" data-view="all" aria-pressed="true">Whole home</button><button data-view="down" aria-pressed="false">Downstairs</button><button data-view="up" aria-pressed="false">Upstairs</button></div>
-      <div id="scene"><div class="loading" id="loading"><span></span>Getting home ready…</div><div id="room-labels" aria-label="Room light switches"></div><div class="tooltip" id="room-tooltip" role="status"></div></div>
-      <div class="scene-bottom"><span class="gesture"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 4-4 4 4M8 6v9a4 4 0 0 0 4 4h7m-4-4 4 4-4 4"/></svg><span>Drag to rotate <i>·</i> Scroll to zoom</span></span><div class="camera-buttons"><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-in" aria-label="Zoom in">+</button><button id="reset-view" aria-label="Reset camera view" title="Reset view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10a9 9 0 1 1 1.5 7M3 4v6h6"/></svg></button></div></div>
-    </section>
-    <aside class="lighting-panel" aria-label="Lighting controls">
-      <div class="panel-intro"><span class="eyebrow">SETTLE IN</span><h2>A little light <br>makes it home.</h2><p>Click a room or flip a switch. <br>Let the evening glow.</p></div>
-      <div class="rooms-heading"><span>ROOM LIGHTS</span><span id="count">0 / 5 on</span></div>
-      <div id="room-controls"></div>
-      <div class="all-controls"><button id="all-on"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg>All lights on</button><button id="all-off">All off</button></div>
-      <div class="evening-note"><span class="note-orb"></span><span id="mood-message">The world can wait.<br>You're home.</span></div>
-      <button class="reference-button" id="open-reference">View the original model <span>↗</span></button>
-    </aside>
-  </main>
-  <footer><span>MADE OF SMALL, FAMILIAR THINGS</span><span>Five rooms. Your kind of evening.</span></footer>
-  <div class="sr-only" id="announcement" aria-live="polite"></div>
-  <dialog id="reference-dialog"><div class="dialog-top"><div><span class="eyebrow">THE STARTING POINT</span><h2>From image to little world.</h2></div><button id="close-reference" aria-label="Close reference">×</button></div><img src="./assets/reference-current.png" alt="The latest reference: an open two-level apartment with a simple ivory bed, long gallery stair, plant-filled study, living-room sectional, stacked laundry, and a two-chair dining table."><p>Your latest reference, brought into the model: an open stair gallery, low wooden bed, stacked laundry, and a two-chair dining nook.</p></dialog>
-</body>
-</html>
+<header class="topbar"><a class="brand" href="./"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m4 15 12-10 12 10v13H4Z"/><path d="M12 28V17h8v11"/></svg><span>home <span class="brand-divider">/</span> <span class="brand-sub">after hours</span></span></a><span class="night-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.3A8.5 8.5 0 0 1 8.7 4 8.5 8.5 0 1 0 20 15.3Z"/></svg> Your home, in a different light</span></header>
+<main><section class="art-panel" aria-label="Interactive watercolor home"><div class="art-toolbar"><span class="eyebrow">THE WHOLE HOME</span><button id="show-labels" aria-pressed="true" class="quiet-button">Room labels <span class="mini-check" aria-hidden="true">✓</span></button></div>
+<div class="art-space"><div class="home-art" id="home-art"><img id="home-image" src="./assets/watercolor-original.jpeg" width="1024" height="682" alt="Watercolor cutaway of your home. All five room lights are on." draggable="false"><svg id="room-hit-areas" viewBox="0 0 1024 682" aria-label="Click a room to switch its light"></svg><div id="room-labels"></div></div></div>
+<div id="lighting-error" class="lighting-error" role="alert" hidden><span id="lighting-error-message"></span><button id="retry-lighting">Try again</button></div><div class="art-caption"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 3 11 10-7 1-3 7Z"/></svg> Click a room to change its light</span><button class="quiet-button" id="browse-states">View all 32 combinations <span aria-hidden="true">↗</span></button></div></section>
+<aside class="lighting-panel" aria-label="Room lighting controls"><div class="panel-heading"><span class="eyebrow">MAKE YOURSELF AT HOME</span><h1>A little light.<br>A different mood.</h1><p>Set the evening, room by room.</p></div><div class="count-line"><span>Room lights</span><output id="light-count" aria-live="polite">5 of 5 on</output></div><div id="room-controls"></div><div class="all-controls"><button id="all-on">All on</button><button id="all-off">All off</button></div><div class="download-controls"><button id="download-current" class="download-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 16v5h14v-5"/></svg>Save this image</button><button id="download-all" class="download-all">Download all 32 images <span>↓</span></button></div><a class="model-link" href="./3d.html">Explore the 3D model <span aria-hidden="true">↗</span></a></aside></main>
+<footer><span id="state-description">Every room, glowing.</span><span>FIVE ROOMS · 32 WAYS TO BE HOME</span></footer>
+<dialog id="states-dialog" aria-labelledby="states-title"><div class="dialog-heading"><div><span class="eyebrow">ONE HOME, EVERY MOOD</span><h2 id="states-title">All 32 combinations</h2><p>Choose an image to set your lights.</p></div><button id="close-states" aria-label="Close combinations">×</button></div><div id="states-grid"></div></dialog><div class="sr-only" id="announcement" role="status"></div>
+</body></html>
