@@ -1,6 +1,6 @@
 # Home, after hours
 
-A self-contained, static Three.js apartment demo based only on `../output/home-cute-isometric.png`, the latest output image at creation. The current model omits both bathrooms as requested and joins their space to the stair gallery. Original image remains unmodified and is available in the reference dialog. All displayed architecture and furniture are real 3D geometry; no image swapping is used for lighting.
+A self-contained, static Three.js apartment demo rebuilt from the user's latest attached image, preserved unchanged in `dist/assets/reference-current.png`. The current reference has no bathrooms. It defines the open stair gallery, sparse timber bed with draped ivory bedding, cream sectional, plant-filled study, laundry tower, and two-chair dining nook. The reference dialog shows this same image. Architecture and furnishings are real 3D geometry, with reference artwork mapped onto the picture frames; no image swapping is used for lighting.
 
 ## Run locally
 
@@ -30,7 +30,7 @@ Open http://localhost:4173. No install or build step is required. Three.js 0.180
 - `dist/index.html`: page shell and accessible controls.
 - `.openai/hosting.json`: private Sites publication.
 
-Geometry is merged per floor, room and material to reduce draw calls. Static shadows are cached and refreshed when floors change. Frames render on camera movement and during light fades. The model is an artistic reconstruction, not a measured architectural model.
+Geometry is merged per floor, room, material and shadow behavior to reduce draw calls. Static shadows are cached and refreshed when floors change. Frames render on camera movement and during light fades. The model is an artistic reconstruction, not a measured architectural model.
 
 ## Verification
 
