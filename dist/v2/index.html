@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" data-mode="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" id="theme-color" content="#ece7dd">
+<meta name="description" content="Tap a room to switch its light. Eight art styles, day and night.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Home">
+<title>Home</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-180.png" type="image/png">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<script>
+// Paint the remembered wall before the artwork arrives, and start the default master downloading early.
+try{
+ const prefs=JSON.parse(localStorage.getItem('home-dashboard:v2:prefs')||'{}'),params=new URLSearchParams(location.hash.slice(1)),hour=new Date().getHours();
+ const auto=prefs.auto||params.get('auto')==='1',clock=hour>=7&&hour<19?'day':'night';
+ const time=auto?clock:(params.get('time')||'day');
+ const expected=(!auto&&params.get('artwork'))||`${params.get('collection')||'original'}/${params.get('style')||'original'}/${time}/v1`;
+ const stored=(localStorage.getItem('home-dashboard:v2:wall')||'').split('|');
+ if(stored[0]&&stored[1]&&(stored[2]===expected||!stored[2])){document.documentElement.dataset.mode=stored[1];document.documentElement.style.setProperty('--wall',stored[0]);}
+ if(!location.hash){const l=document.createElement('link');l.rel='preload';l.as='image';l.fetchPriority='high';l.href=`../assets/styles/original-${time}.png`;document.head.append(l);}
+}catch{}
+</script>
+<link rel="modulepreload" href="./app.js">
+<link rel="modulepreload" href="./catalog.js">
+<link rel="modulepreload" href="./styles.js">
+<link rel="modulepreload" href="./rooms.js">
+<link rel="modulepreload" href="./gemini-artworks.js">
+<link rel="modulepreload" href="./renderer.js">
+<link rel="modulepreload" href="./favorites.js">
+<link rel="modulepreload" href="./zip.js">
+<link rel="modulepreload" href="./mcp.js">
+<link rel="stylesheet" href="./app.css">
+<script type="module" src="./app.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1 class="sr-only">Home</h1>
+    <button class="scene-chip" id="scene-chip" aria-haspopup="dialog" aria-label="Change the art style">
+      <img id="scene-thumb" alt="" width="30" height="20" decoding="async">
+      <span id="scene-name">Isometric</span>
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="seg" id="time-seg" role="group" aria-label="Time of day">
+      <button id="time-day" aria-pressed="true" aria-label="Day"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2m0 14.6v2.2M2.5 12h2.2m14.6 0h2.2M5.3 5.3l1.5 1.5m10.4 10.4 1.5 1.5M5.3 18.7l1.5-1.5M16.7 7.3l1.5-1.5"/></svg></button>
+      <button id="time-night" aria-pressed="false" aria-label="Night"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.3A8.5 8.5 0 0 1 8.7 4 8.5 8.5 0 1 0 20 15.3Z"/></svg></button>
+    </div>
+    <button class="icon-btn" id="more-btn" aria-haspopup="dialog" aria-label="More">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg>
+    </button>
+  </header>
+
+  <main class="body">
+    <section class="stage" aria-label="Home artwork">
+      <div class="art-wrap" style="--ratio:1.5">
+        <div class="art" id="art" aria-busy="false">
+          <img id="home-image" alt="" width="1536" height="1024" draggable="false" decoding="async">
+          <svg id="hits" viewBox="0 0 1536 1024" aria-label="Rooms. Press a room to switch its light."></svg>
+          <div id="labels" aria-hidden="true"></div>
+          <div class="progress" id="progress" hidden></div>
+        </div>
+        <div class="error" id="error" role="alert" hidden><span id="error-text"></span><button id="retry">Retry</button></div>
+      </div>
+    </section>
+
+    <section class="rail" aria-label="Lights">
+      <div class="status-row">
+        <output id="status" aria-live="polite">5 of 5 lights on</output>
+        <div class="all" role="group" aria-label="All lights">
+          <button class="text-btn" id="all-on">All on</button>
+          <button class="text-btn" id="all-off">All off</button>
+        </div>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+  </main>
+</div>
+
+<dialog class="sheet" id="scene-sheet" aria-labelledby="scene-title">
+  <div class="grabber" aria-hidden="true"></div>
+  <div class="sheet-head">
+    <h2 id="scene-title">Style</h2>
+    <div class="seg seg-text" id="collection-seg" role="group" aria-label="Collection"></div>
+    <button class="icon-btn close" data-close aria-label="Close"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="style-grid" id="style-grid" role="radiogroup" aria-label="Art style"></div>
+  <div class="versions" id="versions" hidden>
+    <span class="versions-label">Version</span>
+    <div class="chips" id="version-chips" role="radiogroup" aria-label="Artwork version"></div>
+  </div>
+  <div class="sr-only live" role="status"></div>
+</dialog>
+
+<dialog class="sheet" id="more-sheet" aria-labelledby="more-title">
+  <div class="grabber" aria-hidden="true"></div>
+  <div class="sheet-head">
+    <h2 id="more-title" class="sr-only">More</h2>
+    <button class="icon-btn close" data-close aria-label="Close"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="rows">
+    <button class="row" id="fav-toggle" aria-pressed="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path class="star" d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 16.9l-5.3 2.8 1.1-5.9-4.3-4.1 5.9-.8Z"/></svg><span class="row-label" id="fav-toggle-label">Favorite this view</span></button>
+    <button class="row" id="fav-open"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5V21l-8-4.5L4 21Z"/></svg><span class="row-label">Favorites</span><span class="row-value" id="fav-count"></span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    <button class="row" id="gallery-open"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span class="row-label">All 32 combinations</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    <div class="row-sep" role="separator"></div>
+    <button class="row" id="save-image"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 3.5 3 3-2.5 5 4"/></svg><span class="row-label">Save image</span><span class="row-value">PNG</span></button>
+    <button class="row" id="download-all"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M5 20h14"/></svg><span class="row-label">Download all 32</span><span class="row-value" id="download-status">ZIP</span></button>
+    <div class="row-sep" role="separator"></div>
+    <button class="row" id="labels-toggle" role="switch" aria-checked="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 4h7.5l9.5 9.5-7.5 7.5L3.5 11.5Z"/><circle cx="7.5" cy="8" r="1.2" fill="currentColor" stroke="none"/></svg><span class="row-label">Room markers</span><span class="switch" aria-hidden="true"></span></button>
+    <button class="row" id="auto-toggle" role="switch" aria-checked="false"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span class="row-label">Follow the clock<small>Day from 7 to 19, night otherwise</small></span><span class="switch" aria-hidden="true"></span></button>
+    <div class="row-sep" role="separator"></div>
+    <a class="row" href="../3d.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9 8-4.5M12 12v9m0-9L4 7.5"/></svg><span class="row-label">3D model</span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M19 14v5H5V5h5"/></svg></a>
+    <a class="row" href="../" id="v1-link"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M12 4v16"/></svg><span class="row-label">Original app<small>Same view, for comparison</small></span><svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M19 14v5H5V5h5"/></svg></a>
+  </div>
+  <div class="sr-only live" role="status"></div>
+</dialog>
+
+<dialog class="modal" id="gallery" aria-labelledby="gallery-title">
+  <div class="modal-head">
+    <div><h2 id="gallery-title">All 32 combinations</h2><p id="gallery-caption"></p></div>
+    <button class="icon-btn close" data-close aria-label="Close"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="gallery-grid" id="gallery-grid"></div>
+  <div class="sr-only live" role="status"></div>
+</dialog>
+
+<dialog class="modal" id="favorites" aria-labelledby="favorites-title">
+  <div class="modal-head">
+    <div><h2 id="favorites-title">Favorites</h2><p id="favorites-note"></p></div>
+    <button class="icon-btn close" data-close aria-label="Close"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="fav-list" id="fav-list"></div>
+  <div class="sr-only live" role="status"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="sr-only" id="announce" role="status"></div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # Home, after hours
 
+> A simplified, mobile-first redesign of this app lives in [`dist/v2/`](dist/v2/README.md) and is served at `/v2/`. The original stays at `/` so the two can be compared.
+
 An interactive home illustration with eight art styles, day and night, and five independent room lights. Click a room, its label, or its switch to change the light. The Original and Gemini collections each offer all sixteen style/time combinations. Three retained Gemini drafts bring the total to **35 artworks and 1,120 lighting views**.
 
 ## Styles
